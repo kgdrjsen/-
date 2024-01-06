@@ -23,3 +23,10 @@ the next time Git touches it
 
 2-3 . 에러 bad boolean config value 'true' for 'core.autocrlf' 는 2-2의 코드를 잘못
 적어서 일어난 일이니 2-2를 다시 하기.
+
+3 . 에러 src refspec main does not match any 해결방법 -> 아마 로컬인 master 브랜치로
+떠서 원격 브랜치에 푸시를 못하는 경우
+이때 강제로 'git push -u origin +main' 을 하는 방법도 있는 데 이는 로컬에 없고 원격에
+있는 자료가 날라갈 수 있다.
+그래서 git branch로 확인 해보고 main이 없으면 'git branch -m master main' 을 쳐서
+원격에 있는 메인 브랜치로 바꿔준다.
