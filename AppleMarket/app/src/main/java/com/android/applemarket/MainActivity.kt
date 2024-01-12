@@ -97,6 +97,7 @@ class MainActivity : AppCompatActivity() {
                 val isLike = it.data?.getBooleanExtra("isLike",false) as Boolean
 
                 if (isLike) {
+                    //안되었던 이유 -> MyItem에 선언된게 val이라 변할 수 없어서 var로 고쳐줘야함
                     dataList[itemNum].isLike = true
                     dataList[itemNum].aChat += 1
                 }else {
@@ -105,6 +106,7 @@ class MainActivity : AppCompatActivity() {
                         dataList[itemNum].aChat -= 1
                     }
                 }
+                //어댑터 갱신해주는 코드
                 adapter.notifyItemChanged(itemNum)
 
             }
