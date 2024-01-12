@@ -99,11 +99,11 @@ class MainActivity : AppCompatActivity() {
                 if (isLike) {
                     //안되었던 이유 -> MyItem에 선언된게 val이라 변할 수 없어서 var로 고쳐줘야함
                     dataList[itemNum].isLike = true
-                    dataList[itemNum].aChat += 1
+                    dataList[itemNum].aHeart += 1
                 }else {
                     if(dataList[itemNum].isLike) {
                         dataList[itemNum].isLike = false
-                        dataList[itemNum].aChat -= 1
+                        dataList[itemNum].aHeart -= 1
                     }
                 }
                 //어댑터 갱신해주는 코드
