@@ -68,6 +68,8 @@ class DetailPage : AppCompatActivity() {
         binding.userSubtitle.text = data?.aSubtitle
         binding.userTitle.text = data?.aTitle
 
+        isLike = data?.isLike == true
+
         //좋아요 눌렀을 때와 안눌렀을 때 사진 두개 다 넣기
         binding.ivHeart.setImageResource(if(isLike){R.drawable.img_like2}else{R.drawable.heart})
 
@@ -190,6 +192,11 @@ class DetailPage : AppCompatActivity() {
     }
     fun showSnackbar(){
          Snackbar.make(binding.root,"관심목록에 추가되었습니다",Snackbar.LENGTH_SHORT).show()
+    }
+
+    //안드로이드에서 뒤로가기 눌렀을 경우
+    override fun onBackPressed() {
+        exit()
     }
 
 

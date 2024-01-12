@@ -49,6 +49,13 @@ class MyAdapter (val dItems:MutableList<MyItem>) : RecyclerView.Adapter<MyAdapte
 //        holder.price.text = dItems[position].aPrice.toString()
         holder.chat.text = dItems[position].aChat.toString()
         holder.heart.text = dItems[position].aHeart.toString()
+
+        //리사이클러뷰에 좋아요 표시 띄우기
+        if (dItems[position].isLike) {
+            holder.imgLike.setImageResource(R.drawable.img_like2)
+        } else {
+            holder.imgLike.setImageResource(R.drawable.heart)
+        }
     }
 
     override fun getItemId(position: Int): Long {
@@ -83,6 +90,7 @@ class MyAdapter (val dItems:MutableList<MyItem>) : RecyclerView.Adapter<MyAdapte
         val price = binding.txtPrice
         val chat = binding.chatCount
         val heart = binding.heartCount
+        val imgLike = binding.imgHeart
 
     }
 
