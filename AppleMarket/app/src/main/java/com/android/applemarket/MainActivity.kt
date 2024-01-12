@@ -63,8 +63,7 @@ class MainActivity : AppCompatActivity() {
             getString(R.string.no10_subtitle),getString(R.string.no10_person),190000,40,6))
 
 
-        binding.recyclerview.adapter = MyAdapter(dataList)
-
+        //어댑터에 데이터 집어넣기
         val adapter = MyAdapter(dataList)
         binding.recyclerview.adapter = adapter
         binding.recyclerview.layoutManager = LinearLayoutManager(this)
@@ -115,7 +114,8 @@ class MainActivity : AppCompatActivity() {
             })
         builder.setNegativeButton("취소",
             DialogInterface.OnClickListener{dialog, which ->
-                null
+                //null 대신 dismiss()넣기
+                dialog.dismiss()
             })
         builder.show()
     }

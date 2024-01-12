@@ -3,6 +3,7 @@ package com.android.applemarket
 import android.content.Intent
 import android.content.res.Resources
 import android.graphics.BitmapFactory
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -15,32 +16,50 @@ class DetailPage : AppCompatActivity() {
 
     private val binding by lazy { ActivityDetailPageBinding.inflate(layoutInflater) }
 
+    //데이터 받아오기
+    private val data : MyItem? by lazy {
+        //Tiramisu 이후 버전은 이렇게 받고
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(Contants.Item_OBJECT,MyItem::class.java)
+        //이전 버전이 받는 코드도 넣어줘야 하므로 if문을 사용해서 두 가지를 입력 해야한다.
+        }else {
+            intent.getParcelableExtra<MyItem>(Contants.Item_OBJECT)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         //데이터 받아오기
-        var data = intent?.getParcelableExtra<MyItem>(Contants.Item_OBJECT)?:
-        //?: 로 null일 경우 앱이 꺼지지 않게 넣는 데이터
-        MyItem(R.drawable.sample1,"제목","위치","내용","아이디",1000,1,1)
+//        var data = intent?.getParcelableExtra<MyItem>(Contants.Item_OBJECT)?:
+//        //?: 로 null일 경우 앱이 꺼지지 않게 넣는 데이터
+//        MyItem(R.drawable.sample1,"제목","위치","내용","아이디",1000,1,1)
         //받은 데이터 집어넣기
-        binding.imgTitle.setImageResource(data.aImg)
-        binding.userId.text = data.aUserid
-        binding.userPrice.text = DecimalFormat("#,###").format(data.aPrice) + "원"
-        binding.userLocation.text = data.aUserlocation
-        binding.userSubtitle.text = data.aSubtitle
-        binding.userTitle.text = data.aTitle
+//        binding.imgTitle.setImageResource(data.aImg)
+//        binding.userId.text = data.aUserid
+//        binding.userPrice.text = DecimalFormat("#,###").format(data.aPrice) + "원"
+//        binding.userLocation.text = data.aUserlocation
+//        binding.userSubtitle.text = data.aSubtitle
+//        binding.userTitle.text = data.aTitle
 
 //        //데이터 받아오기
 //        var data = intent?.getParcelableExtra<MyItem>(Contants.Item_OBJECT)
-//        //받은 데이터 집어넣기
-//        //이미지는 받은 int가 진짜 int인지 모른다고 떠서 let을 써서 변환
+        //받은 데이터 집어넣기
+        //이미지는 받은 int가 진짜 int인지 모른다고 떠서 let을 써서 변환
 //        data?.aImg?.let { binding.imgTitle.setImageResource(it) }
-//        binding.userId.text = data?.aUserid
-//        binding.userPrice.text = DecimalFormat("#,###").format(data?.aPrice) + "원"
-//        binding.userLocation.text = data?.aUserlocation
-//        binding.userSubtitle.text = data?.aSubtitle
-//        binding.userTitle.text = data?.aTitle
+        //setImageResource() 는 res폴더에 있는 리소스만 가능하고 setImageDrawable()은 다른데서 파일을 읽고 이미지를 세팅할 때 사용하므로 뒤에 걸 사용
+        //bingding.imageView.setImageDrawable(ResourcesCompat.getDrawable(resources,android.R.drawable.sample1,null)) 형식으로 사용
+        binding.imgTitle.setImageDrawable(data?.let {
+            ResourcesCompat.getDrawable(
+                resources,it.aImg,null
+            )
+        })
+        binding.userId.text = data?.aUserid
+        binding.userPrice.text = DecimalFormat("#,###").format(data?.aPrice) + "원"
+        binding.userLocation.text = data?.aUserlocation
+        binding.userSubtitle.text = data?.aSubtitle
+        binding.userTitle.text = data?.aTitle
 
 
         //누른 아이템의 위치 값을 받아서 스트링값 집어넣기 -> percelize 사용해서 이걸 바꿔야 할거 같음
