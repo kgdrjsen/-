@@ -14,6 +14,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AlphaAnimation
 import android.widget.Adapter
 import android.widget.ImageView
 import android.widget.Toast
@@ -176,6 +177,16 @@ class MainActivity : AppCompatActivity() {
                 false
             )
         )
+
+        //플로팅 버튼
+        binding.recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                fadeScroll()
+            }
+        })
+        binding.fbTotop.setOnClickListener {
+            binding.recyclerview.smoothScrollToPosition(0)
+        }
 
 
         //어댑터에 데이터 집어넣기
@@ -344,6 +355,31 @@ class MainActivity : AppCompatActivity() {
         }
         manager.notify(13, builder.build())
     }
+    fun fadeScroll() {
+        val fadeIn = AlphaAnimation(0f,1f).apply { duration = 500 }
+        val fadeOut = AlphaAnimation(1f,0f).apply { duration = 500 }
+        var isTop = true
+
+        binding.recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (!binding.recyclerview.canScrollVertically(-1)
+                    && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    binding.fbTotop.startAnimation(fadeOut)
+                    binding.fbTotop.visibility = View.GONE
+                    isTop = true
+                }else {
+                    if (isTop) {
+                        binding.fbTotop.visibility = View.VISIBLE
+                        binding.fbTotop.startAnimation(fadeIn)
+                        isTop = false
+                    }
+                }
+            }
+
+        })
+
+    }
+
 
 }
 

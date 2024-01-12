@@ -1,13 +1,9 @@
 package com.android.applemarket
 
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.accessibility.AccessibilityManager.AccessibilityServicesStateChangeListener
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.applemarket.databinding.ItemRecyclerviewBinding
 import java.text.DecimalFormat
@@ -52,7 +48,7 @@ class MyAdapter (val dItems:MutableList<MyItem>) : RecyclerView.Adapter<MyAdapte
 
         //리사이클러뷰에 좋아요 표시 띄우기
         if (dItems[position].isLike) {
-            holder.imgLike.setImageResource(R.drawable.img_like2)
+            holder.imgLike.setImageResource(R.drawable.heart2)
         } else {
             holder.imgLike.setImageResource(R.drawable.heart)
         }

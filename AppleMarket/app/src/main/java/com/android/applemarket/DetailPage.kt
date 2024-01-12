@@ -1,15 +1,11 @@
 package com.android.applemarket
 
 import android.content.Intent
-import android.content.res.Resources
-import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import com.android.applemarket.databinding.ActivityDetailPageBinding
-import com.android.applemarket.databinding.ItemRecyclerviewBinding
 import com.google.android.material.snackbar.Snackbar
 import java.text.DecimalFormat
 
@@ -71,13 +67,13 @@ class DetailPage : AppCompatActivity() {
         isLike = data?.isLike == true
 
         //좋아요 눌렀을 때와 안눌렀을 때 사진 두개 다 넣기
-        binding.ivHeart.setImageResource(if(isLike){R.drawable.img_like2}else{R.drawable.heart})
+        binding.ivHeart.setImageResource(if(isLike){R.drawable.heart2}else{R.drawable.heart})
 
         //좋아요 눌렀을 때
         binding.layHeartClick.setOnClickListener {
             //좋아요를 처음 눌렀을 때
             if (!isLike) {
-                binding.ivHeart.setImageResource(R.drawable.img_like2)
+                binding.ivHeart.setImageResource(R.drawable.heart2)
                 showSnackbar()
                 isLike = true
                 //그 외
