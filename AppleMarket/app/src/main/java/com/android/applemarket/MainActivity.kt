@@ -184,6 +184,7 @@ class MainActivity : AppCompatActivity() {
                 fadeScroll()
             }
         })
+        //플로팅 버튼 눌렀을 때
         binding.fbTotop.setOnClickListener {
             binding.recyclerview.smoothScrollToPosition(0)
         }
@@ -356,17 +357,20 @@ class MainActivity : AppCompatActivity() {
         manager.notify(13, builder.build())
     }
     fun fadeScroll() {
+        //애니메이션 효과
         val fadeIn = AlphaAnimation(0f,1f).apply { duration = 500 }
         val fadeOut = AlphaAnimation(1f,0f).apply { duration = 500 }
         var isTop = true
 
         binding.recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                //맨 위 일때
                 if (!binding.recyclerview.canScrollVertically(-1)
                     && newState == RecyclerView.SCROLL_STATE_IDLE) {
                     binding.fbTotop.startAnimation(fadeOut)
                     binding.fbTotop.visibility = View.GONE
                     isTop = true
+                    //아래일 때
                 }else {
                     if (isTop) {
                         binding.fbTotop.visibility = View.VISIBLE

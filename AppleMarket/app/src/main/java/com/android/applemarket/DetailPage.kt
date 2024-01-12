@@ -1,9 +1,11 @@
 package com.android.applemarket
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.android.applemarket.databinding.ActivityDetailPageBinding
 import com.google.android.material.snackbar.Snackbar
@@ -34,12 +36,12 @@ class DetailPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        //데이터 받아오기
+//        //데이터 받아오기
 //        var data = intent?.getParcelableExtra<MyItem>(Contants.Item_OBJECT)?:
 //        //?: 로 null일 경우 앱이 꺼지지 않게 넣는 데이터
-//        MyItem(R.drawable.sample1,"제목","위치","내용","아이디",1000,1,1)
-        //받은 데이터 집어넣기
-//        binding.imgTitle.setImageResource(data.aImg)
+//        MyItem(R.drawable.sample1,"제목","위치","내용","아이디",1000,1,1,false)
+////        받은 데이터 집어넣기
+//        binding.imgTitle.setImageResource(data?.aImg as Int)
 //        binding.userId.text = data.aUserid
 //        binding.userPrice.text = DecimalFormat("#,###").format(data.aPrice) + "원"
 //        binding.userLocation.text = data.aUserlocation
@@ -52,11 +54,16 @@ class DetailPage : AppCompatActivity() {
         //이미지는 받은 int가 진짜 int인지 모른다고 떠서 let을 써서 변환
 //        data?.aImg?.let { binding.imgTitle.setImageResource(it) }
         //setImageResource() 는 res폴더에 있는 리소스만 가능하고 setImageDrawable()은 다른데서 파일을 읽고 이미지를 세팅할 때 사용하므로 뒤에 걸 사용
-        //bingding.imageView.setImageDrawable(ResourcesCompat.getDrawable(resources,android.R.drawable.sample1,null)) 형식으로 사용
-        binding.imgTitle.setImageDrawable(data?.let {
-            ResourcesCompat.getDrawable(
-                resources,it.aImg,null
-            )
+//        //bingding.imageView.setImageDrawable(ResourcesCompat.getDrawable(resources,android.R.drawable.sample1,null)) 형식으로 사용
+//        binding.imgTitle.setImageDrawable(data?.let {
+//            ResourcesCompat.getDrawable(
+//                resources,it.aImg,null
+//            )
+//        })
+//        binding.imgTitle.setImageDrawable(data?.aImg?.let { resources.getDrawable(it) })
+        binding.imgTitle.setImageDrawable(data?.aImg?.let {
+            ResourcesCompat.getDrawable(resources,
+                it,null)
         })
         binding.userId.text = data?.aUserid
         binding.userPrice.text = DecimalFormat("#,###").format(data?.aPrice) + "원"
@@ -191,6 +198,7 @@ class DetailPage : AppCompatActivity() {
     }
 
     //안드로이드에서 뒤로가기 눌렀을 경우
+    @SuppressLint("MissingSuperCall")
     override fun onBackPressed() {
         exit()
     }
