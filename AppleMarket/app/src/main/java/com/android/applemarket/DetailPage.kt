@@ -10,7 +10,6 @@ import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import com.android.applemarket.databinding.ActivityDetailPageBinding
 import com.android.applemarket.databinding.ItemRecyclerviewBinding
-import com.google.android.material.snackbar.Snackbar
 import java.text.DecimalFormat
 
 class DetailPage : AppCompatActivity() {
@@ -67,23 +66,6 @@ class DetailPage : AppCompatActivity() {
         binding.userLocation.text = data?.aUserlocation
         binding.userSubtitle.text = data?.aSubtitle
         binding.userTitle.text = data?.aTitle
-
-        //좋아요 눌렀을 때와 안눌렀을 때 사진 두개 다 넣기
-        binding.ivHeart.setImageResource(if(isLike){R.drawable.img_like2}else{R.drawable.heart})
-
-        //좋아요 눌렀을 때
-        binding.layHeartClick.setOnClickListener {
-            //좋아요를 처음 눌렀을 때
-            if (!isLike) {
-                binding.ivHeart.setImageResource(R.drawable.img_like2)
-                showSnackbar()
-                isLike = true
-                //그 외
-            }else {
-                binding.ivHeart.setImageResource(R.drawable.heart)
-                isLike = false
-            }
-        }
 
 
         //누른 아이템의 위치 값을 받아서 스트링값 집어넣기 -> percelize 사용해서 이걸 바꿔야 할거 같음
@@ -187,9 +169,6 @@ class DetailPage : AppCompatActivity() {
 
         setResult(RESULT_OK,intent)
         finish()
-    }
-    fun showSnackbar(){
-         Snackbar.make(binding.root,"관심목록에 추가되었습니다",Snackbar.LENGTH_SHORT).show()
     }
 
 
