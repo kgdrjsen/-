@@ -81,6 +81,11 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+        adapter.itemLongClick = object : MyAdapter.ItemLongClick {
+            override fun onLongClick(view: View, position: Int) {
+
+            }
+        }
 
     }
 

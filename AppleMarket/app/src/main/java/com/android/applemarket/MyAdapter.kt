@@ -23,7 +23,7 @@ class MyAdapter (val dItems:MutableList<MyItem>) : RecyclerView.Adapter<MyAdapte
     }
 
     var itemClick : ItemClick? = null
-    var itemLongClick : ItemLongClick = null
+    var itemLongClick : ItemLongClick? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyAdapter.Holder {
         val binding = ItemRecyclerviewBinding.inflate(LayoutInflater.from(parent.context),parent,false)
