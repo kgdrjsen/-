@@ -16,6 +16,9 @@ class DetailPage : AppCompatActivity() {
 
     private val binding by lazy { ActivityDetailPageBinding.inflate(layoutInflater) }
 
+    //좋아요 상태
+    private var isLike = false
+
     //데이터 받아오기
     private val data : MyItem? by lazy {
         //Tiramisu 이후 버전은 이렇게 받고
@@ -25,6 +28,9 @@ class DetailPage : AppCompatActivity() {
         }else {
             intent.getParcelableExtra<MyItem>(Contants.Item_OBJECT)
         }
+    }
+    private val position : Int by lazy {
+        intent.getIntExtra(Contants.Item_NUMBER,0)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -149,10 +155,20 @@ class DetailPage : AppCompatActivity() {
 //        }
         //뒤로가기
         binding.back.setOnClickListener {
-            val intent = Intent(this,MainActivity::class.java)
-            startActivity(intent)
-            finish()
+//            val intent = Intent(this,MainActivity::class.java)
+//            startActivity(intent)
+//            finish()
+            //다시 메인으로 넘겨주기
+            exit()
         }
+    }
+    fun exit () {
+        val intent = Intent(this,MainActivity::class.java)
+        intent.putExtra(Contants.Item_NUMBER,position)
+        intent.putExtra("isLike",isLike)
+
+        setResult(RESULT_OK,intent)
+        finish()
     }
 
 

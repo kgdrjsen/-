@@ -18,6 +18,8 @@ import android.widget.Adapter
 import android.widget.ImageView
 import android.widget.Toast
 import android.window.OnBackInvokedDispatcher
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -29,6 +31,9 @@ import java.io.ByteArrayOutputStream
 class MainActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+    private val dataList = mutableListOf<MyItem>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,28 +44,28 @@ class MainActivity : AppCompatActivity() {
         }
 
         //더미데이터들 리스트로 만들어 추가하기
-        val dataList = mutableListOf<MyItem>()
+//        val dataList = mutableListOf<MyItem>()
 
         dataList.add(MyItem(R.drawable.sample1,getString(R.string.no1_title),getString(R.string.no1_location),
-            getString(R.string.no1_subtitle),getString(R.string.no1_person),1000,13,25))
+            getString(R.string.no1_subtitle),getString(R.string.no1_person),1000,13,25,false))
         dataList.add(MyItem(R.drawable.sample2,getString(R.string.no2_title),getString(R.string.no2_location),
-            getString(R.string.no2_subtitle),getString(R.string.no2_person),20000,8,28))
+            getString(R.string.no2_subtitle),getString(R.string.no2_person),20000,8,28,false))
         dataList.add(MyItem(R.drawable.sample3,getString(R.string.no3_title),getString(R.string.no3_location),
-            getString(R.string.no3_subtitle),getString(R.string.no3_person),10000,23,5))
+            getString(R.string.no3_subtitle),getString(R.string.no3_person),10000,23,5,false))
         dataList.add(MyItem(R.drawable.sample4,getString(R.string.no4_title),getString(R.string.no4_location),
-            getString(R.string.no4_subtitle),getString(R.string.no4_person),10000,14,17))
+            getString(R.string.no4_subtitle),getString(R.string.no4_person),10000,14,17,false))
         dataList.add(MyItem(R.drawable.sample5,getString(R.string.no5_title),getString(R.string.no5_location),
-            getString(R.string.no5_subtitle),getString(R.string.no5_person),150000,22,9))
+            getString(R.string.no5_subtitle),getString(R.string.no5_person),150000,22,9,false))
         dataList.add(MyItem(R.drawable.sample6,getString(R.string.no6_title),getString(R.string.no6_location),
-            getString(R.string.no6_subtitle),getString(R.string.no6_person),50000,25,16))
+            getString(R.string.no6_subtitle),getString(R.string.no6_person),50000,25,16,false))
         dataList.add(MyItem(R.drawable.sample7,getString(R.string.no7_title),getString(R.string.no7_location),
-            getString(R.string.no7_subtitle),getString(R.string.no7_person),150000,142,54))
+            getString(R.string.no7_subtitle),getString(R.string.no7_person),150000,142,54,false))
         dataList.add(MyItem(R.drawable.sample8,getString(R.string.no8_title),getString(R.string.no8_location),
-            getString(R.string.no8_subtitle),getString(R.string.no8_person),180000,31,7))
+            getString(R.string.no8_subtitle),getString(R.string.no8_person),180000,31,7,false))
         dataList.add(MyItem(R.drawable.sample9,getString(R.string.no9_title),getString(R.string.no9_location),
-            getString(R.string.no9_subtitle),getString(R.string.no9_person),30000,7,28))
+            getString(R.string.no9_subtitle),getString(R.string.no9_person),30000,7,28,false))
         dataList.add(MyItem(R.drawable.sample10,getString(R.string.no10_title),getString(R.string.no10_location),
-            getString(R.string.no10_subtitle),getString(R.string.no10_person),190000,40,6))
+            getString(R.string.no10_subtitle),getString(R.string.no10_person),190000,40,6,false))
 
 
         //어댑터에 데이터 집어넣기
@@ -73,7 +78,10 @@ class MainActivity : AppCompatActivity() {
             override fun onClick(view: View, position: Int) {
                 val intent = Intent(this@MainActivity, DetailPage::class.java)
                 intent.putExtra(Contants.Item_OBJECT,dataList[position])
-                startActivity(intent)
+                intent.putExtra(Contants.Item_NUMBER,position)
+                //디테일에서 좋아요를 누르거나 해제 했을 때 받아야 하므로
+                activityResultLauncher.launch(intent)
+//                startActivity(intent)
 //                intent.putExtra(Contants.Item_NUMBER, position)
 //                //Parcelize를 이용해서 나머지 데이터도 전달하기
 //                intent.putExtra(Contants.Item_OBJECT,dataList[position])
@@ -81,6 +89,27 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+        //디테일에서 받을 때
+        activityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                val itemNum = it.data?.getIntExtra(Contants.Item_NUMBER,0) as Int
+                val isLike = it.data?.getBooleanExtra("isLike",false) as Boolean
+
+                if (isLike) {
+                    dataList[itemNum].isLike = true
+                    dataList[itemNum].aChat += 1
+                }else {
+                    if(dataList[itemNum].isLike) {
+                        dataList[itemNum].isLike = false
+                        dataList[itemNum].aChat -= 1
+                    }
+                }
+                adapter.notifyItemChanged(itemNum)
+
+            }
+        }
+
         adapter.itemLongClick = object : MyAdapter.ItemLongClick {
             override fun onLongClick(view: View, position: Int) {
 
