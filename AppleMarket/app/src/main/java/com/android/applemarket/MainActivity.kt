@@ -14,10 +14,13 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AlphaAnimation
 import android.widget.Adapter
 import android.widget.ImageView
 import android.widget.Toast
 import android.window.OnBackInvokedDispatcher
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -29,6 +32,9 @@ import java.io.ByteArrayOutputStream
 class MainActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    lateinit var activityResultLauncher: ActivityResultLauncher<Intent>
+    private val dataList = mutableListOf<MyItem>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,32 +45,152 @@ class MainActivity : AppCompatActivity() {
         }
 
         //더미데이터들 리스트로 만들어 추가하기
-        val dataList = mutableListOf<MyItem>()
+//        val dataList = mutableListOf<MyItem>()
 
-        dataList.add(MyItem(R.drawable.sample1,getString(R.string.no1_title),getString(R.string.no1_location),
-            getString(R.string.no1_subtitle),getString(R.string.no1_person),1000,13,25))
-        dataList.add(MyItem(R.drawable.sample2,getString(R.string.no2_title),getString(R.string.no2_location),
-            getString(R.string.no2_subtitle),getString(R.string.no2_person),20000,8,28))
-        dataList.add(MyItem(R.drawable.sample3,getString(R.string.no3_title),getString(R.string.no3_location),
-            getString(R.string.no3_subtitle),getString(R.string.no3_person),10000,23,5))
-        dataList.add(MyItem(R.drawable.sample4,getString(R.string.no4_title),getString(R.string.no4_location),
-            getString(R.string.no4_subtitle),getString(R.string.no4_person),10000,14,17))
-        dataList.add(MyItem(R.drawable.sample5,getString(R.string.no5_title),getString(R.string.no5_location),
-            getString(R.string.no5_subtitle),getString(R.string.no5_person),150000,22,9))
-        dataList.add(MyItem(R.drawable.sample6,getString(R.string.no6_title),getString(R.string.no6_location),
-            getString(R.string.no6_subtitle),getString(R.string.no6_person),50000,25,16))
-        dataList.add(MyItem(R.drawable.sample7,getString(R.string.no7_title),getString(R.string.no7_location),
-            getString(R.string.no7_subtitle),getString(R.string.no7_person),150000,142,54))
-        dataList.add(MyItem(R.drawable.sample8,getString(R.string.no8_title),getString(R.string.no8_location),
-            getString(R.string.no8_subtitle),getString(R.string.no8_person),180000,31,7))
-        dataList.add(MyItem(R.drawable.sample9,getString(R.string.no9_title),getString(R.string.no9_location),
-            getString(R.string.no9_subtitle),getString(R.string.no9_person),30000,7,28))
-        dataList.add(MyItem(R.drawable.sample10,getString(R.string.no10_title),getString(R.string.no10_location),
-            getString(R.string.no10_subtitle),getString(R.string.no10_person),190000,40,6))
+        dataList.add(
+            MyItem(
+                R.drawable.sample1,
+                getString(R.string.no1_title),
+                getString(R.string.no1_location),
+                getString(R.string.no1_subtitle),
+                getString(R.string.no1_person),
+                1000,
+                13,
+                25,
+                false
+            )
+        )
+        dataList.add(
+            MyItem(
+                R.drawable.sample2,
+                getString(R.string.no2_title),
+                getString(R.string.no2_location),
+                getString(R.string.no2_subtitle),
+                getString(R.string.no2_person),
+                20000,
+                8,
+                28,
+                false
+            )
+        )
+        dataList.add(
+            MyItem(
+                R.drawable.sample3,
+                getString(R.string.no3_title),
+                getString(R.string.no3_location),
+                getString(R.string.no3_subtitle),
+                getString(R.string.no3_person),
+                10000,
+                23,
+                5,
+                false
+            )
+        )
+        dataList.add(
+            MyItem(
+                R.drawable.sample4,
+                getString(R.string.no4_title),
+                getString(R.string.no4_location),
+                getString(R.string.no4_subtitle),
+                getString(R.string.no4_person),
+                10000,
+                14,
+                17,
+                false
+            )
+        )
+        dataList.add(
+            MyItem(
+                R.drawable.sample5,
+                getString(R.string.no5_title),
+                getString(R.string.no5_location),
+                getString(R.string.no5_subtitle),
+                getString(R.string.no5_person),
+                150000,
+                22,
+                9,
+                false
+            )
+        )
+        dataList.add(
+            MyItem(
+                R.drawable.sample6,
+                getString(R.string.no6_title),
+                getString(R.string.no6_location),
+                getString(R.string.no6_subtitle),
+                getString(R.string.no6_person),
+                50000,
+                25,
+                16,
+                false
+            )
+        )
+        dataList.add(
+            MyItem(
+                R.drawable.sample7,
+                getString(R.string.no7_title),
+                getString(R.string.no7_location),
+                getString(R.string.no7_subtitle),
+                getString(R.string.no7_person),
+                150000,
+                142,
+                54,
+                false
+            )
+        )
+        dataList.add(
+            MyItem(
+                R.drawable.sample8,
+                getString(R.string.no8_title),
+                getString(R.string.no8_location),
+                getString(R.string.no8_subtitle),
+                getString(R.string.no8_person),
+                180000,
+                31,
+                7,
+                false
+            )
+        )
+        dataList.add(
+            MyItem(
+                R.drawable.sample9,
+                getString(R.string.no9_title),
+                getString(R.string.no9_location),
+                getString(R.string.no9_subtitle),
+                getString(R.string.no9_person),
+                30000,
+                7,
+                28,
+                false
+            )
+        )
+        dataList.add(
+            MyItem(
+                R.drawable.sample10,
+                getString(R.string.no10_title),
+                getString(R.string.no10_location),
+                getString(R.string.no10_subtitle),
+                getString(R.string.no10_person),
+                190000,
+                40,
+                6,
+                false
+            )
+        )
+
+        //플로팅 버튼
+        binding.recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                fadeScroll()
+            }
+        })
+        //플로팅 버튼 눌렀을 때
+        binding.fbTotop.setOnClickListener {
+            binding.recyclerview.smoothScrollToPosition(0)
+        }
 
 
-        binding.recyclerview.adapter = MyAdapter(dataList)
-
+        //어댑터에 데이터 집어넣기
         val adapter = MyAdapter(dataList)
         binding.recyclerview.adapter = adapter
         binding.recyclerview.layoutManager = LinearLayoutManager(this)
@@ -73,15 +199,65 @@ class MainActivity : AppCompatActivity() {
         adapter.itemClick = object : MyAdapter.ItemClick {
             override fun onClick(view: View, position: Int) {
                 val intent = Intent(this@MainActivity, DetailPage::class.java)
-                intent.putExtra(Contants.Item_OBJECT,dataList[position])
-                startActivity(intent)
+                intent.putExtra(Contants.Item_OBJECT, dataList[position])
+                intent.putExtra(Contants.Item_NUMBER, position)
+                //디테일에서 좋아요를 누르거나 해제 했을 때 받아야 하므로
+                activityResultLauncher.launch(intent)
+//                startActivity(intent)
 //                intent.putExtra(Contants.Item_NUMBER, position)
 //                //Parcelize를 이용해서 나머지 데이터도 전달하기
 //                intent.putExtra(Contants.Item_OBJECT,dataList[position])
 //                startActivity(intent)
             }
-
         }
+
+        //길게 클릭해서 지우기
+        adapter.itemLongClick = object : MyAdapter.ItemLongClick {
+            override fun onLongClick(view: View, position: Int) {
+                val del = AlertDialog.Builder(this@MainActivity)
+                del.setIcon(R.mipmap.ic_launcher)
+                del.setTitle("상품 삭제")
+                del.setMessage("상품을 정말 삭제하시겠습니까?")
+
+                //확인을 눌렀을 때 뒤로가게끔
+                del.setPositiveButton("확인",
+                    DialogInterface.OnClickListener { dialog, _ ->
+                        dataList.removeAt(position)
+                        adapter.notifyItemRemoved(position)
+                        //이상태면 지우고 그 아래 아이템이 나오므로 다시 재정리
+                        adapter.notifyItemRangeChanged(position,dataList.size)
+                    })
+                del.setNegativeButton("취소",
+                    DialogInterface.OnClickListener { dialog, _ ->
+                        //null 대신 dismiss()넣기
+                        dialog.dismiss()
+                    })
+                del.show()
+            }
+        }
+
+        //디테일에서 받을 때
+        activityResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if (it.resultCode == RESULT_OK) {
+                    val itemNum = it.data?.getIntExtra(Contants.Item_NUMBER, 0) as Int
+                    val isLike = it.data?.getBooleanExtra("isLike", false) as Boolean
+
+                    if (isLike) {
+                        //안되었던 이유 -> MyItem에 선언된게 val이라 변할 수 없어서 var로 고쳐줘야함
+                        dataList[itemNum].isLike = true
+                        dataList[itemNum].aHeart += 1
+                    } else {
+                        if (dataList[itemNum].isLike) {
+                            dataList[itemNum].isLike = false
+                            dataList[itemNum].aHeart -= 1
+                        }
+                    }
+                    //어댑터 갱신해주는 코드
+                    adapter.notifyItemChanged(itemNum)
+
+                }
+            }
 
     }
 
@@ -109,13 +285,14 @@ class MainActivity : AppCompatActivity() {
 
         //확인을 눌렀을 때 뒤로가게끔
         builder.setPositiveButton("확인",
-            DialogInterface.OnClickListener{dialog, which ->
+            DialogInterface.OnClickListener { dialog, which ->
                 super.onBackPressed()
                 finishAffinity()
             })
         builder.setNegativeButton("취소",
-            DialogInterface.OnClickListener{dialog, which ->
-                null
+            DialogInterface.OnClickListener { dialog, which ->
+                //null 대신 dismiss()넣기
+                dialog.dismiss()
             })
         builder.show()
     }
@@ -158,9 +335,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         //알림을 눌렀을 때 앱의 메인 화면 띄우게 연결하기
-        val intent = Intent(this,MainActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val pendingIntent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         // 알림의 기본 정보
         builder.run {
@@ -174,4 +356,34 @@ class MainActivity : AppCompatActivity() {
         }
         manager.notify(13, builder.build())
     }
+    fun fadeScroll() {
+        //애니메이션 효과
+        val fadeIn = AlphaAnimation(0f,1f).apply { duration = 500 }
+        val fadeOut = AlphaAnimation(1f,0f).apply { duration = 500 }
+        var isTop = true
+
+        binding.recyclerview.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                //맨 위 일때
+                if (!binding.recyclerview.canScrollVertically(-1)
+                    && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    binding.fbTotop.startAnimation(fadeOut)
+                    binding.fbTotop.visibility = View.GONE
+                    isTop = true
+                    //아래일 때
+                }else {
+                    if (isTop) {
+                        binding.fbTotop.visibility = View.VISIBLE
+                        binding.fbTotop.startAnimation(fadeIn)
+                        isTop = false
+                    }
+                }
+            }
+
+        })
+
+    }
+
+
 }
+

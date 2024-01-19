@@ -1,13 +1,9 @@
 package com.android.applemarket
 
-import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.accessibility.AccessibilityManager.AccessibilityServicesStateChangeListener
-import android.widget.AdapterView.OnItemClickListener
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.android.applemarket.databinding.ItemRecyclerviewBinding
 import java.text.DecimalFormat
@@ -18,7 +14,12 @@ class MyAdapter (val dItems:MutableList<MyItem>) : RecyclerView.Adapter<MyAdapte
         fun onClick(view : View, position:Int)
     }
 
+    interface  ItemLongClick {
+        fun onLongClick(view : View, position: Int)
+    }
+
     var itemClick : ItemClick? = null
+    var itemLongClick : ItemLongClick? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyAdapter.Holder {
         val binding = ItemRecyclerviewBinding.inflate(LayoutInflater.from(parent.context),parent,false)
@@ -32,6 +33,10 @@ class MyAdapter (val dItems:MutableList<MyItem>) : RecyclerView.Adapter<MyAdapte
             itemClick?.onClick(it,position)
 
         }
+        holder.itemView.setOnLongClickListener {
+            itemLongClick?.onLongClick(it,position)
+            return@setOnLongClickListener true
+        }
         holder.img.setImageResource(dItems[position].aImg)
         holder.title.text = dItems[position].aTitle
         holder.userid.text = dItems[position].aUserid
@@ -40,6 +45,13 @@ class MyAdapter (val dItems:MutableList<MyItem>) : RecyclerView.Adapter<MyAdapte
 //        holder.price.text = dItems[position].aPrice.toString()
         holder.chat.text = dItems[position].aChat.toString()
         holder.heart.text = dItems[position].aHeart.toString()
+
+        //리사이클러뷰에 좋아요 표시 띄우기
+        if (dItems[position].isLike) {
+            holder.imgLike.setImageResource(R.drawable.heart2)
+        } else {
+            holder.imgLike.setImageResource(R.drawable.heart)
+        }
     }
 
     override fun getItemId(position: Int): Long {
@@ -74,6 +86,7 @@ class MyAdapter (val dItems:MutableList<MyItem>) : RecyclerView.Adapter<MyAdapte
         val price = binding.txtPrice
         val chat = binding.chatCount
         val heart = binding.heartCount
+        val imgLike = binding.imgHeart
 
     }
 
